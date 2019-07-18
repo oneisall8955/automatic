@@ -20,7 +20,7 @@
     1. Mirages主题是商业付费主题,请在[Mirages商城](https://store.get233.com/)自行购买.本教程不包含此程序.
     2. 如需进行自动安装Mirages主题,则将下载到的 `Mirages-For-Typecho.zip` 解压后,修改 `1.主题` 为 `theme` , `2.插件` 修改为 `plugin` ,重新打包成 `Mirages-For-Typecho.tar.gz` 放在 `automatic/typecho/` 中
     3. 安装好后选择启用Mirages的主题和Mirages的插件方可生效
-    4. Mirages主题需要一些特殊设置,详情请到[帮助文档](https://mirages.docs.get233.com)[必看文档-快速上手-必须的配置项] 查看
+    4. Mirages主题需要一些特殊设置,详情请到[帮助文档](https://mirages.docs.get233.com)[必看文档-快速上手-必须的配置项](https://mirages.docs.get233.com/#/docs/quickstart/quick-start?id=%e5%bf%85%e9%a1%bb%e7%9a%84%e9%85%8d%e7%bd%ae%e9%a1%b9) 查看
     5. 解决插件冲突,如安装音乐插件 [APlayer](https://github.com/MoePlayer/APlayer-Typecho) ,需要特殊处理,详情请到帮助文档[高级设置-插件冲突解决方案](https://mirages.docs.get233.com)查看具体处理
 * 关于音乐插件[APlayer](https://github.com/MoePlayer/APlayer-Typecho)的安装
     1. 本文作者使用的版本为`v2.0.5`,亲测可用
