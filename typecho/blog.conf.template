@@ -1,0 +1,25 @@
+server {
+    listen 9528;
+    listen [::]:9528;
+    server_name _;
+    index index.php index.html index.htm index.nginx-debian.html;
+    root /opt/software/typecho;
+    
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    if (!-e $request_filename) {
+        rewrite ^(.*)$ /index.php$1 last;
+    }
+
+    location ~ .*\.php(\/.*)*$ {
+        include fastcgi.conf;
+        fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+        include fastcgi_params;
+    }
+
+    location ~* \.(db)$ {
+        deny all;
+    }
+}
