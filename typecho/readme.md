@@ -3,17 +3,16 @@
 * 数据库使用sqlite,sqlite的版本是3.x
 * nginx反向代理的配置在nginx配置目录`$NGINX_CONF_DIR`环境变量中,如无设置到则需要到`/etc/profile.d/`中新增一个专门设置nginx目录的配置文件,如`/etc/profile.d/nginx_evn.sh`
 
-![](https://i.loli.net/2019/07/18/5d30060a05e9b10013.png)
-```bash
-	root@VM-0-14-debian:/opt/temp|
-	⇒  cat /etc/profile.d/nginx_evn.sh
-	NGINX_CONF_DIR=/opt/software/nginx/conf.d
-	export NGINX_CONF_DIR
-	echo 'export nginx evn finish ... (this msg from /etc/profile.d/nginx_evn.sh)'
-	root@VM-0-14-debian:/opt/temp|
-	⇒  echo $NGINX_CONF_DIR
-	/opt/software/nginx/conf.d
-```
+    ```bash
+    root@VM-0-14-debian:/opt/temp|
+    ⇒  cat /etc/profile.d/nginx_evn.sh
+    NGINX_CONF_DIR=/opt/software/nginx/conf.d
+    export NGINX_CONF_DIR
+    echo 'export nginx evn finish ... (this msg from /etc/profile.d/nginx_evn.sh)'
+    root@VM-0-14-debian:/opt/temp|
+    ⇒  echo $NGINX_CONF_DIR
+    /opt/software/nginx/conf.d
+    ```
 * 外网typecho登陆地址:xxx.xxx.xxx.xxx:9528
 * 安装目录需要一些权限,例如sqlite3的db
 * 数据库文件
