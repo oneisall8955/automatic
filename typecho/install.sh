@@ -190,6 +190,9 @@ else
     info "安装typecho:Mirages-For-Typecho.tar.gz 主题成功"
 fi
 chmod 777 ${typecho_home}
+custom_env_profile="/etc/profile.d/typecho_evn.sh"
+echo "TYPECHO_HOME=${typecho_home}" >> ${custom_env_profile}
+echo "export TYPECHO_HOME" >> ${custom_env_profile}
 
 systemctl restart nginx.service
 systemctl restart ${php_fpm_service}

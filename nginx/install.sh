@@ -67,7 +67,7 @@ else
     info "默认不安装with-http_ssl_module"
 fi
 chose_https=`echo ${chose_https} | tr '[a-z]' '[A-Z]'`
-if [[ ${chose_https} != "YES" || ${chose_https}!="Y" ]];then
+if [[ ${chose_https} == "YES" || ${chose_https} == "Y" ]];then
     #选择安装!!!
     chose_https=1
     info "选择安装with-http_ssl_module"
