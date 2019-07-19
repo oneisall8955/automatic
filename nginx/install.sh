@@ -71,7 +71,7 @@ if [[ ${chose_https} != "YES" || ${chose_https}!="Y" ]];then
     #选择安装!!!
     chose_https=1
     info "选择安装with-http_ssl_module"
-    chose_https="${chose_https} --with-http_ssl_module"
+    nginx_configure="${nginx_configure} --with-http_ssl_module"
 fi
 
 info "nginx编译配置如下:"
