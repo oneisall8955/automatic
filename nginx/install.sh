@@ -76,6 +76,8 @@ fi
 
 info "nginx编译配置如下:"
 info_var "nginx_configure"
+sleep 5s
+
 ./configure ${nginx_configure}
 
 make && make install >/dev/null
