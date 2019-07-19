@@ -1,13 +1,13 @@
-#!/bin/bash 
+#!/bin/bash
 #find this shell's dir to include basic function
 #ex:this_shell_dir=/root/automatic/typecho
-excute_path=`pwd`
+execute_path=`pwd`
 this_shell_dir=`dirname $0`
-cd $this_shell_dir
+cd ${this_shell_dir}
 this_shell_dir=`pwd`
 cd ${this_shell_dir}/..
 automatic_dir=`pwd`
-cd $excute_path
+cd ${execute_path}
 
 #inclue basic function
 source ${automatic_dir}/basic_shell.sh
@@ -89,15 +89,16 @@ info_var "typecho_home"
 info_var "temp"
 
 #find the nginx config dir
-pfile="/etc/profile"
-if [[ ! -f "${pfile}" ]] && [[ "${NGINX_CONF_DIR}X" == "X" ]];then
-    error "找不到:环境变量配置文件:${pfile},失败"
+etc_profile="/etc/profile"
+NGINX_CONF_DIR=${NGINX_CONF_DIR}
+if [[ ! -f "${etc_profile}" ]] && [[ "${NGINX_CONF_DIR}X" == "X" ]];then
+    error "找不到:环境变量配置文件:${etc_profile},失败"
     exit 1
 fi
-source /etc/profile
+source "/etc/profile"
 nginx_conf_dir=${NGINX_CONF_DIR}
 if [ ! -d ${nginx_conf_dir} ] ;then
-    error "nginx配置文件路径不存在:${nginx_config_dir}"
+    error "nginx配置文件路径不存在:${nginx_conf_dir}"
     exit 1
 fi
 info_var "nginx_conf_dir"
@@ -115,7 +116,7 @@ server {
     server_name _;
     index index.php index.html index.htm index.nginx-debian.html;
     root ${typecho_home};
-    
+
     location / {
         try_files \$uri \$uri/ =404;
     }
@@ -140,7 +141,7 @@ server {
     server_name ${domain_value};
     index index.php index.html index.htm index.nginx-debian.html;
     root ${typecho_home};
-    
+
     location / {
         try_files \$uri \$uri/ =404;
     }
