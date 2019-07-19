@@ -1,4 +1,6 @@
 #!/bin/bash -e
+#log file dir
+mkdir -p "/opt/temp"
 #function
 red="\033[31m"  ## red
 green="\033[32m" ## green
@@ -25,34 +27,97 @@ function echo_(){
     msg=$*
     echo -e "${start_}${msg}${end_}"
 }
+format_log="/opt/temp/format.log"
+function format_(){
+    line_no=$1
+    echo "line_no=${line_no}" > ${format_log}
+    shift
+    echo "$ *=$*" >> ${format_log}
+    msg="$*"
+    echo "msg=${msg} check ..." >> ${format_log}
+    if [[ "${msg}X" == "X" ]] ;then
+        echo "msg is empty.let msg=line_no,line_no=\"\"" >> ${format_log}
+        msg=${line_no}
+        line_no=""
+    fi
+    echo "line_no=${line_no} check..." >> ${format_log}
+    if [[ "${line_no}X" == "X" ]] ;then
+        result=`printf "[%5d]-${msg}\n" 0`
+        echo "line_no is emypt,result=${result}" >> ${format_log}
+    else
+        result=`printf "[%5d]-${msg}\n" ${line_no}`
+        echo "line_no no emypt,result=${result}" >> ${format_log}
+    fi
+    echo "${result}"
+}
 
 function info(){
-    echo_ green "[INFO]  -- : $*"
+    msg=`format_ "$@"`
+    echo_ green "[INFO]  -- : ${msg}"
 }
 
 function warn(){
-    echo_ yellow "[WARN]  -- : $*"
+    msg=`format_ "$@"`
+    echo_ yellow "[WARN]  -- : ${msg}"
 }
 
 function error(){
-    echo_ red "[ERROR] -- : $*"
+    msg=`format_ "$@"`
+    echo_ red "[ERROR] -- : ${msg}"
 }
 
+#aaa=AAA
+#info_var "aaa"
+#info_var $LINENO "aaa"
+#info_var "aaa" "aaa's value"
+#info_var $LINENO "aaa" "aaa's value"
+info_var_log="/opt/temp/info_var.log"
 function info_var(){
-    var_name=$1
-    var_value=$(eval echo '$'$1)
-    title=$2
+    rm -rf ${info_var_log}
+    line_no=""
+    var_name=""
+    var_value=""
+    title=""
+    #0个参数
+    if [[ $# == 0 ]];then
+        info "0" > /dev/null
+    fi
+    #1个参数
+    if [[ $# == 1 ]];then
+        var_name=$1
+    fi
+    #2个参数
+    if [[ $# == 2 ]];then
+        type=`echo $1 | grep [^0-9] >/dev/null && echo "NOT_INT" || echo "INT"`
+        info $LINENO "DEBUG---type=${type}" >> ${info_var_log}
+        if [[ ${type} == 'INT' ]];then
+            #info_var $LINENO "aaa"
+            line_no=$1
+            var_name=$2
+        else
+            #info_var "aaa" "aaa's value"
+            var_name=$1
+            title=$2
+        fi
+    fi
+    #大于等于3个参数,忽略第4个及后面的
+    if [[ $# -ge 3 ]];then
+        line_no=$1
+        var_name=$2
+        title=$3
+    fi
+    info $LINENO "DEBUG---var_name=$var_name" >> ${info_var_log}
+    var_value=`eval echo '$'"$var_name"`
     if [[ "${title}X" != "X" ]] ;then
         title="${title}:"
     fi
-    info "${title}${var_name}:${var_value}"
+    info ${line_no} "${title}[${var_name}=${var_value}]"
 }
 
 #get value in properties file 
 #Usage:get_properties $file $key
 log_file="/opt/temp/get_properties.log"
 function get_properties(){
-mkdir -p "/opt/temp"
 rm -rf ${log_file}
     file=$1
     key=$2
@@ -73,7 +138,7 @@ rm -rf ${log_file}
                 value=${value_in_properties}
                 break
             fi
-            # 必须使用 while read line; do done; <<< "xxx"/`excute result` 这种形式!!! cat xxx | while read line 管道这种形式变量作用域会再推出循环后失效!!!
+            # 必须使用 while read line; do done; <<< "xxx"/`excute result` 这种形式!!! cat xxx | while read line 管道这种形式变量作用域会再退出循环后失效!!!
         done <<< `cat ${file} | grep -v "^[ \t]*\#" | grep -v "^$" |awk '{ if($1!="") print $0 }'|awk -F '=' '{ if($2!="") print $0 }'`
         echo "search:${key} in $file,value=${value}" >> ${log_file}
     fi

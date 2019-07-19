@@ -13,16 +13,16 @@ source ${this_shell_dir}/../basic_shell.sh
 
 #install dependencies
 apt update
-info "安装以下程序:gcc,unzip"
+info $LINENO "安装以下程序:gcc,unzip"
 apt-get -y install gcc unzip
 
-info "安装以下程序:openssl,libssl-dev"
+info $LINENO "安装以下程序:openssl,libssl-dev"
 apt-get -y install openssl libssl-dev
 
-info "安装以下程序:libpcre3,libpcre3-dev"
+info $LINENO "安装以下程序:libpcre3,libpcre3-dev"
 apt-get -y install libpcre3 libpcre3-dev
 
-info "安装以下程序:zlib1g-dev"
+info $LINENO "安装以下程序:zlib1g-dev"
 apt-get -y install zlib1g-dev
 
 echo ""
@@ -33,24 +33,24 @@ nginx_version="1.15.7"
 nginx_package="${this_shell_dir}/nginx-${nginx_version}.tar.gz"
 nginx_home="/opt/software/nginx"
 
-info_var "nginx_version"
-info_var "nginx_package"
-info_var "nginx_home"
-info_var "temp"
+info_var $LINENO "nginx_version"
+info_var $LINENO "nginx_package"
+info_var $LINENO "nginx_home"
+info_var $LINENO "temp"
 
 mkdir -p ${nginx_home}
 mkdir -p ${temp}
 rm -rf ${temp}/*
 
 if [ ! -f ${nginx_package} ] ;then
-    error "nginx 压缩包不存在:${nginx_package}"
+    error $LINENO "nginx 压缩包不存在:${nginx_package}"
     exit 1
 fi
 
 tar -zxf ${nginx_package} -C ${temp}
 
 if [ ! -f ${temp}/nginx-${nginx_version}/configure ] ;then
-    error "nginx configure 不存在:${temp}/nginx-${nginx_version}/configure"
+    error $LINENO "nginx configure 不存在:${temp}/nginx-${nginx_version}/configure"
     echo 1
 fi
 
@@ -58,26 +58,26 @@ cd ${temp}/nginx-${nginx_version}
 #编译配置
 nginx_configure="--prefix=${nginx_home}"
 #with-http_ssl_module模块
-warn "是否使用with-http_ssl_module?(用于支持网页https访问)"
+warn $LINENO "是否使用with-http_ssl_module?(用于支持网页https访问)"
 if read -t 10 -p "yes/YES/Y/y选择安装,10s后不输入默认不安装)" chose_https
 then
-    info_var "chose_https"
+    info_var $LINENO "chose_https"
 else
-    info_var "chose_https"
-    info "默认不安装with-http_ssl_module"
+    info_var $LINENO "chose_https"
+    info $LINENO "默认不安装with-http_ssl_module"
 fi
 chose_https=`echo ${chose_https} | tr '[a-z]' '[A-Z]'`
 if [[ ${chose_https} == "YES" || ${chose_https} == "Y" ]];then
     #选择安装!!!
     chose_https=1
-    info "选择安装with-http_ssl_module"
-    nginx_configure="${nginx_configure} --with-http_ssl_module"
+    info $LINENO "选择安装with-http_ssl_module"
+    nginx_configure="${nginx_configure} --with-http_ssl_module --with-http_v2_module --with-http_ssl_module"
 else
     chose_https=0
 fi
 
-info "nginx编译配置如下:"
-info_var "nginx_configure"
+info $LINENO "nginx编译配置如下:"
+info_var $LINENO "nginx_configure"
 sleep 5s
 
 ./configure ${nginx_configure}
@@ -122,7 +122,7 @@ if [ -f ${nginx_home}/conf/nginx.conf ] ;then
     mv ${nginx_home}/conf/nginx.conf ${nginx_home}/conf/nginx.conf.init_bak
 fi
 nginx_conf_dir="${nginx_home}/conf.d"
-info_var "nginx_conf_dir"
+info_var $LINENO "nginx_conf_dir"
 mkdir -p ${nginx_conf_dir}
 cat > ${nginx_home}/conf/nginx.conf << EOF
 user  www-data;
@@ -179,31 +179,31 @@ systemctl enable nginx.service
 
 #environment variable
 custom_env_profile="/etc/profile.d/nginx_evn.sh"
-info_var "custom_env_profile" "nginx环境变量配置文件"
+info_var $LINENO "custom_env_profile" "nginx环境变量配置文件"
 NGINX_CONF_DIR=${nginx_conf_dir}
-info_var "NGINX_CONF_DIR"
-info "设置环境变量 NGINX_CONF_DIR=${NGINX_CONF_DIR} 到 ${custom_env_profile} 文件"
+info_var $LINENO "NGINX_CONF_DIR"
+info $LINENO "设置环境变量 NGINX_CONF_DIR=${NGINX_CONF_DIR} 到 ${custom_env_profile} 文件"
 echo "NGINX_CONF_DIR=${nginx_conf_dir}" > ${custom_env_profile}
 echo "export NGINX_CONF_DIR" >> ${custom_env_profile}
 NGINX_HTTPS_SUPPORT=${chose_https}
-info_var "NGINX_HTTPS_SUPPORT"
+info_var $LINENO "NGINX_HTTPS_SUPPORT"
 echo "NGINX_HTTPS_SUPPORT=${NGINX_HTTPS_SUPPORT}"
-info "设置环境变量 NGINX_HTTPS_SUPPORT=${NGINX_HTTPS_SUPPORT} 到 ${custom_env_profile} 文件"
+info $LINENO "设置环境变量 NGINX_HTTPS_SUPPORT=${NGINX_HTTPS_SUPPORT} 到 ${custom_env_profile} 文件"
 echo "export NGINX_HTTPS_SUPPORT" >> ${custom_env_profile}
 echo "echo 'export nginx evn finish ... (this msg from ${custom_env_profile})'" >> ${custom_env_profile}
 
 chmod +x ${custom_env_profile}
 
-info "${custom_env_profile}文件如下:"
-warn "---------------------------"
+info $LINENO "${custom_env_profile}文件如下:"
+warn $LINENO "---------------------------"
 cat ${custom_env_profile} | while read line
 do
     echo_ yellow ${line}
 done
-warn "---------------------------"
+warn $LINENO "---------------------------"
 
 echo ""
 source ${custom_env_profile}
 echo ""
 
-info "已成功安装nginx,退出"
+info $LINENO "已成功安装nginx,退出"
