@@ -58,7 +58,7 @@ cd ${temp}/nginx-${nginx_version}
 #编译配置
 nginx_configure="--prefix=${nginx_home}"
 #with-http_ssl_module模块
-warn "是否使用with-http_ssl_module?(,其他输入则忽略,with-http_ssl_module需要证书,目前版本仅仅安装一个域名的证书!不支持泛型域名,如*.example.com"
+warn "是否使用with-http_ssl_module?(用于支持网页https访问)"
 if read -t 10 -p "yes/YES/Y/y选择安装,10s后不输入默认不安装)" chose_https
 then
     info_var "chose_https"
@@ -72,6 +72,8 @@ if [[ ${chose_https} != "YES" || ${chose_https}!="Y" ]];then
     chose_https=1
     info "选择安装with-http_ssl_module"
     nginx_configure="${nginx_configure} --with-http_ssl_module"
+else
+    chose_https=0
 fi
 
 info "nginx编译配置如下:"
@@ -180,10 +182,14 @@ custom_env_profile="/etc/profile.d/nginx_evn.sh"
 info_var "custom_env_profile" "nginx环境变量配置文件"
 NGINX_CONF_DIR=${nginx_conf_dir}
 info_var "NGINX_CONF_DIR"
-info "设置 NGINX_CONF_DIR 环境变量 NGINX_CONF_DIR 到 ${custom_env_profile} 文件"
-
+info "设置环境变量 NGINX_CONF_DIR=${NGINX_CONF_DIR} 到 ${custom_env_profile} 文件"
 echo "NGINX_CONF_DIR=${nginx_conf_dir}" > ${custom_env_profile}
 echo "export NGINX_CONF_DIR" >> ${custom_env_profile}
+NGINX_HTTPS_SUPPORT=${chose_https}
+info_var "NGINX_HTTPS_SUPPORT"
+echo "NGINX_HTTPS_SUPPORT=${NGINX_HTTPS_SUPPORT}"
+info "设置环境变量 NGINX_HTTPS_SUPPORT=${NGINX_HTTPS_SUPPORT} 到 ${custom_env_profile} 文件"
+echo "export NGINX_HTTPS_SUPPORT" >> ${custom_env_profile}
 echo "echo 'export nginx evn finish ... (this msg from ${custom_env_profile})'" >> ${custom_env_profile}
 
 chmod +x ${custom_env_profile}
