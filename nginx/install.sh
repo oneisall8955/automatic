@@ -2,11 +2,11 @@
 
 #find this shell's dir to include basic function
 #ex:this_shell_dir=/root/automatic/nginx
-excute_path=`pwd`
+execute_path=`pwd`
 this_shell_dir=`dirname $0`
-cd $this_shell_dir
+cd ${this_shell_dir}
 this_shell_dir=`pwd`
-cd $excute_path
+cd ${execute_path}
 
 #inclue basic function
 source ${this_shell_dir}/../basic_shell.sh
@@ -55,24 +55,44 @@ if [ ! -f ${temp}/nginx-${nginx_version}/configure ] ;then
 fi
 
 cd ${temp}/nginx-${nginx_version}
+#编译配置
+nginx_configure="--prefix=${nginx_home}"
+#with-http_ssl_module模块
+warn "是否使用with-http_ssl_module?(,其他输入则忽略,with-http_ssl_module需要证书,目前版本仅仅安装一个域名的证书!不支持泛型域名,如*.example.com"
+if read -t 10 -p "yes/YES/Y/y选择安装,10s后不输入默认不安装)" chose_https
+then
+    info_var "chose_https"
+else
+    info_var "chose_https"
+    info "默认不安装with-http_ssl_module"
+fi
+chose_https=`echo ${chose_https} | tr '[a-z]' '[A-Z]'`
+if [[ ${chose_https} != "YES" || ${chose_https}!="Y" ]];then
+    #选择安装!!!
+    chose_https=1
+    info "选择安装with-http_ssl_module"
+    chose_https="${chose_https} --with-http_ssl_module"
+fi
 
-./configure --prefix=${nginx_home}
+info "nginx编译配置如下:"
+info_var "nginx_configure"
+./configure ${nginx_configure}
 
 make && make install >/dev/null
 
 whereis nginx | awk -F ':' '{print $2}' | xargs rm -rf
 ln -s ${nginx_home}/sbin/nginx /usr/bin/nginx
 
-cat > /lib/systemd/system/nginx.service <<EOF 
-# Stop dance for nginx 
-# ======================= 
+cat > /lib/systemd/system/nginx.service <<EOF
+# Stop dance for nginx
+# =======================
 #
-# ExecStop sends SIGSTOP (graceful stop) to the nginx process. 
-# If, after 5s (--retry QUIT/5) nginx is still running, systemd takes control 
-# and sends SIGTERM (fast shutdown) to the main process. 
-# After another 5s (TimeoutStopSec=5), and if nginx is alive, systemd sends 
-# SIGKILL to all the remaining processes in the process group (KillMode=mixed). 
-# 
+# ExecStop sends SIGSTOP (graceful stop) to the nginx process.
+# If, after 5s (--retry QUIT/5) nginx is still running, systemd takes control
+# and sends SIGTERM (fast shutdown) to the main process.
+# After another 5s (TimeoutStopSec=5), and if nginx is alive, systemd sends
+# SIGKILL to all the remaining processes in the process group (KillMode=mixed).
+#
 # nginx signals reference doc: # http://nginx.org/en/docs/control.html
 #
 [Unit]
@@ -90,12 +110,12 @@ ExecStop=-/sbin/start-stop-daemon --quiet --stop --retry QUIT/5 --pidfile ${ngin
 TimeoutStopSec=5
 KillMode=mixed
 
-[Install] 
+[Install]
 WantedBy=multi-user.target
 EOF
 
 if [ -f ${nginx_home}/conf/nginx.conf ] ;then
-    mv ${nginx_home}/conf/nginx.conf ${nginx_home}/conf/nginx.conf.init_bak 
+    mv ${nginx_home}/conf/nginx.conf ${nginx_home}/conf/nginx.conf.init_bak
 fi
 nginx_conf_dir="${nginx_home}/conf.d"
 info_var "nginx_conf_dir"
@@ -149,7 +169,7 @@ http {
 }
 EOF
 
-systemctl daemon-reload 
+systemctl daemon-reload
 systemctl start nginx.service
 systemctl enable nginx.service
 
