@@ -44,8 +44,8 @@ fi
 cd ${nginx_conf_dir}/..
 nginx_home=`pwd`
 nginx_ssl_dir="${nginx_home}/ssl"
-info_var 'nginx_home'
-info_var 'nginx_ssl_dir'
+info_var $LINENO "nginx_home"
+info_var $LINENO "nginx_ssl_dir"
 if [[ ! -d "${nginx_ssl_dir}" ]]; then
     error $LINENO "nginx默认ssl证书配置文件夹不存在"
 fi
@@ -63,7 +63,7 @@ NGINX_HTTPS_SUPPORT=${NGINX_HTTPS_SUPPORT:-0}
 info_var $LINENO "NGINX_HTTPS_SUPPORT"
 if [[ ${NGINX_HTTPS_SUPPORT} != 1 ]]; then
     warn "当前nginx可能没有安装https模块!"
-    warn "如已经安装Https支持,请在${nginx_conf_dir}目录下添加profile文件设置NGINX_HTTPS_SUPPORT=1"
+    warn "如已经安装Https支持,请在/etc/profile.d/目录下添加相关profile文件设置NGINX_HTTPS_SUPPORT=1"
     if read -t 10 -p "yes/YES/Y/y选择忽略警告,继续安装?10s后不输入默认不安装" continue_install
     then
         continue_install=`echo ${continue_install} | tr '[a-z]' '[A-Z]'`
@@ -97,10 +97,12 @@ mkdir -p ${certificate_unzip_dir}
 unzip -o -d ${certificate_unzip_dir} ${certificate_file}
 blog_conf="${nginx_conf_dir}/blog.conf"
 info_var $LINENO "blog_conf" "原博客配置文件"
+nowTime=`date +'%Y%m%d_%H%M%S'`
 if [[ -f "${blog_conf}" ]]; then
-    nowTime=`date +'%Y%m%d_%H%M%S'`
-    info_var $LINENO "blog_conf"
-    mv ${blog_conf} "${blog_conf}.bak_${nowTime}"
+    blog_bak_file="${blog_conf}.bak_${nowTime}"
+    mv ${blog_conf} "${blog_bak_file}"
+    info_var $LINENO "blog_bak_file"
+    info $LINENO "成功备份原始博客:配置文件:${blog_conf}->${blog_bak_file}"
 fi
 ssl_crt_file="${certificate_unzip_dir}/Nginx/1_${domain}_bundle.crt"
 ssl_key_file="${certificate_unzip_dir}/Nginx/2_${domain}.key"
@@ -114,18 +116,25 @@ if [[ ! -f ${ssl_crt_file} ]] || [[ ! -f ${ssl_key_file} ]]; then
     set -e
     exit 1
 fi
-blog_ssl_conf="${nginx_conf_dir}/blog_ssl.conf"
+domain_https_ssl_conf="${nginx_conf_dir}/${domain}_https_ssl.conf"
 php_fpm_service=`ls -lt /lib/systemd/system/ |grep 'fpm.service' | head -n 1 |awk '{print $NF}'`
 php_sock=`echo ${php_fpm_service} | sed 's/.service/.sock/g'`
-info_var $LINENO "blog_ssl_conf"
+info_var $LINENO "domain_https_ssl_conf"
 info_var $LINENO "php_fpm_service"
 info_var $LINENO "php_sock"
 if [[ -f "${php_sock}"  ]]; then
     error $LINENO "sock 文件不存在"
     exit 1
 fi
+if [[ -f "${domain_https_ssl_conf}" ]]; then
+    conf_bak_file=${domain_https_ssl_conf}.bak_${nowTime}
+    mv ${domain_https_ssl_conf} "${conf_bak_file}"
+    info_var $LINENO "conf_bak_file"
+    info $LINENO "成功备份原始domain:${domain}配置文件:${domain_https_ssl_conf}->${conf_bak_file}"
+fi
 
-cat > ${blog_ssl_conf} << EOF
+
+cat > ${domain_https_ssl_conf} << EOF
 server {
     listen 80;
     listen [::]:80;
@@ -136,8 +145,9 @@ server {
 }
 
 server {
-    listen 443 ssl http2 fastopen=3 reuseport;
-    listen [::]:443 ssl http2 fastopen=3 reuseport;
+    listen 443 ssl http2;
+    # listen 443 ssl http2 fastopen=3 reuseport;
+    # listen [::]:443 ssl http2 fastopen=3 reuseport;
     server_name ${domain};
     index index.php index.html index.htm index.nginx-debian.html;
     root ${TYPECHO_HOME};
