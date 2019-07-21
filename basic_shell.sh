@@ -144,10 +144,36 @@ rm -rf ${log_file}
     fi
     echo ${value}
 }
+
+#log for get properties
 function get_properties_error(){
 cat > $log_file <<EOF
     File no exist or key is empty,return empty string
     Usage:get_properties file key
     Example:get_properties /opt/temp/user.properties name
 EOF
+}
+
+#backup file
+#aaa.txt - > aaa.txt_20190719_201251
+function default_backup(){
+    info "备份文件流程开始(不支持文件夹)..."
+    if [[ $# -le 0 ]];then
+        error "Usage default_backup 'file_a.txt' 'file_b.txt'"
+        return 0
+    fi
+    now_time=`date +'%Y%m%d_%H%M%S'`
+    info_var "now_time"
+    for file in "$@"
+    do
+        info_var "file" "待备份文件"
+        if [[ -f ${file} ]];then
+            backup_file="${file}.bak_${now_time}"
+            info_var "backup_file" "${file}备份文件"
+            mv ${file} ${backup_file}
+        else
+            error "待备份文件${file}不存在,跳过备份"
+        fi
+    done
+    return 0
 }

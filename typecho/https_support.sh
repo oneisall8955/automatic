@@ -97,9 +97,9 @@ mkdir -p ${certificate_unzip_dir}
 unzip -o -d ${certificate_unzip_dir} ${certificate_file}
 blog_conf="${nginx_conf_dir}/blog.conf"
 info_var $LINENO "blog_conf" "原博客配置文件"
-nowTime=`date +'%Y%m%d_%H%M%S'`
+now_time=`date +'%Y%m%d_%H%M%S'`
 if [[ -f "${blog_conf}" ]]; then
-    blog_bak_file="${blog_conf}.bak_${nowTime}"
+    blog_bak_file="${blog_conf}.bak_${now_time}"
     mv ${blog_conf} "${blog_bak_file}"
     info_var $LINENO "blog_bak_file"
     info $LINENO "成功备份原始博客:配置文件:${blog_conf}->${blog_bak_file}"
@@ -127,7 +127,7 @@ if [[ -f "${php_sock}"  ]]; then
     exit 1
 fi
 if [[ -f "${domain_https_ssl_conf}" ]]; then
-    conf_bak_file=${domain_https_ssl_conf}.bak_${nowTime}
+    conf_bak_file=${domain_https_ssl_conf}.bak_${now_time}
     mv ${domain_https_ssl_conf} "${conf_bak_file}"
     info_var $LINENO "conf_bak_file"
     info $LINENO "成功备份原始domain:${domain}配置文件:${domain_https_ssl_conf}->${conf_bak_file}"
@@ -146,8 +146,7 @@ server {
 
 server {
     listen 443 ssl http2;
-    # listen 443 ssl http2 fastopen=3 reuseport;
-    # listen [::]:443 ssl http2 fastopen=3 reuseport;
+    listen [::]:443 ssl http2;
     server_name ${domain};
     index index.php index.html index.htm index.nginx-debian.html;
     root ${TYPECHO_HOME};
