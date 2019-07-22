@@ -30,7 +30,7 @@ info_var $LINENO "nginx_conf_dir"
 #param check
 ## $# < 2
 if [[ $# -lt 2 ]] ;then
-    error $LINENO "Usage : bash `basename $0` 'source.exmaple.com' 'target.exmaple.com'"
+    error $LINENO "Usage : bash `basename $0` 'source.example.com' 'target.example.com'"
     exit 1
 fi
 source_domain=$1
