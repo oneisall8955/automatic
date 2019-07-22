@@ -114,7 +114,7 @@ function info_var(){
     info ${line_no} "${title}[${var_name}=${var_value}]"
 }
 
-#get value in properties file 
+#get value in properties file
 #Usage:get_properties $file $key
 log_file="/opt/temp/get_properties.log"
 function get_properties(){
@@ -133,12 +133,12 @@ rm -rf ${log_file}
             value_in_properties=${line##*=}
             #trim
             value_in_properties=`echo ${value_in_properties}`
-            echo [${key_in_properties}]=[${value_in_properties}] >> ${log_file}
-            if [[ $key == ${key_in_properties} ]];then
+            echo "[${key_in_properties}]=[${value_in_properties}]" >> ${log_file}
+            if [[ ${key} == ${key_in_properties} ]];then
                 value=${value_in_properties}
                 break
             fi
-            # 必须使用 while read line; do done; <<< "xxx"/`excute result` 这种形式!!! cat xxx | while read line 管道这种形式变量作用域会再退出循环后失效!!!
+            # 必须使用 while read line; do done; <<< "xxx"/`execute result` 这种形式!!! cat xxx | while read line 管道这种形式变量作用域会再退出循环后失效!!!
         done <<< `cat ${file} | grep -v "^[ \t]*\#" | grep -v "^$" |awk '{ if($1!="") print $0 }'|awk -F '=' '{ if($2!="") print $0 }'`
         echo "search:${key} in $file,value=${value}" >> ${log_file}
     fi
@@ -147,7 +147,7 @@ rm -rf ${log_file}
 
 #log for get properties
 function get_properties_error(){
-cat > $log_file <<EOF
+cat > ${log_file} <<EOF
     File no exist or key is empty,return empty string
     Usage:get_properties file key
     Example:get_properties /opt/temp/user.properties name
