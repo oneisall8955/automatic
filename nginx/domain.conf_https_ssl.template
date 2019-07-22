@@ -1,0 +1,146 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name www.example.com;
+    # http redirect to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+####static pages https########
+#server {
+#    listen 443 ssl http2;
+#    listen [::]:443 ssl http2;
+#    server_name www.example.com;
+#
+#    # ssl certificate absolute path , also it could be relative path (relative NGINX_HOME})
+#    ssl_certificate /opt/software/nginx/ssl/www.example.com.crt;
+#    ssl_certificate_key /opt/software/nginx/ssl/www.example.com.key;
+#    ssl_session_timeout 1d;
+#    ssl_session_cache shared:SSL:50m;
+#    ssl_session_tickets off;
+#
+#    ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+#    ssl_ciphers TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH
++CHACHA20-draf
+#t:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
+#    ssl_prefer_server_ciphers on;
+#
+#    add_header Strict-Transport-Security max-age=15768000;
+#
+#    ssl_stapling on;
+#
+#    location / {
+#    root /home/manage/dist;
+#        index index.html;
+#    }
+#}
+
+####php https########
+#server {
+#    listen 443 ssl http2;
+#    listen [::]:443 ssl http2;
+#    server_name www.example.com;
+#    index index.php index.html;
+#    # your web site home
+#    root /opt/www/www.example.com;
+#    # ssl certificate absolute path , also it could be relative path (relative NGINX_HOME})
+#    ssl_certificate /opt/software/nginx/ssl/www.example.com.crt;
+#    ssl_certificate_key /opt/software/nginx/ssl/www.example.com.key;
+#    ssl_session_timeout 1d;
+#    ssl_session_cache shared:SSL:50m;
+#    ssl_session_tickets off;
+#
+#    ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+#    ssl_ciphers TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH
++CHACHA20-draf
+#t:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
+#    ssl_prefer_server_ciphers on;
+#
+#    add_header Strict-Transport-Security max-age=15768000;
+#
+#    ssl_stapling on;
+#
+#    location / {
+#        try_files $uri $uri/ =404;
+#    }
+#
+#    if (!-e $request_filename) {
+#        rewrite ^(.*)$ /index.php$1 last;
+#    }
+#
+#    location ~ .*\.php(\/.*)*$ {
+#        include fastcgi.conf;
+#        fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+#        include fastcgi_params;
+#    }
+#
+#    # defend
+#    location ~* \.(db)$ {
+#        deny all;
+#    }
+#}
+
+####tomcat https########
+#upstream tomcat_cluster {
+#    server 127.0.0.1:8080 weight=4;
+#    server 127.0.0.1:8081 weight=2;
+#    server 127.0.0.1:8082 weight=1;
+#}
+#server {
+#    listen 443 ssl http2;
+#    listen [::]:443 ssl http2;
+#    server_name www.example.com;
+#    index index.php index.html index.htm index.nginx-debian.html;
+#    # ssl certificate absolute path , also it could be relative path (relative NGINX_HOME})
+#    ssl_certificate /opt/software/nginx/ssl/www.example.com.crt;
+#    ssl_certificate_key /opt/software/nginx/ssl/www.example.com.key;
+#    ssl_session_timeout 1d;
+#    ssl_session_cache shared:SSL:50m;
+#    ssl_session_tickets off;
+#
+#    ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+#    ssl_ciphers TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH
++CHACHA20-draf
+#t:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
+#    ssl_prefer_server_ciphers on;
+#
+#    add_header Strict-Transport-Security max-age=15768000;
+#
+#    ssl_stapling on;
+#
+#    #your server handle setting
+#    location / {
+#            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#            proxy_set_header Host $http_host;
+#            proxy_set_header X-Forwarded-Proto https;
+#            proxy_redirect off;
+#            proxy_connect_timeout      240;
+#            proxy_send_timeout         240;
+#            proxy_read_timeout         240;
+#            # note, there is not SSL here! plain HTTP is used
+#            proxy_pass http://tomcat_cluster;
+#        }
+#}
+
+#tomcat's server.xml setting
+#<?xml version='1.0' encoding='utf-8'?>
+#<Server port="8005" shutdown="SHUTDOWN">
+#  <Service name="Catalina">
+#    <Connector port="8080" protocol="HTTP/1.1"
+#               connectionTimeout="20000"
+#               redirectPort="443"
+#               proxyPort="443"/>
+#
+#    <Engine name="Catalina" defaultHost="localhost">
+#
+#      <Host name="localhost"  appBase="webapps"
+#            unpackWARs="true" autoDeploy="true">
+#            <Valve className="org.apache.catalina.valves.RemoteIpValve"
+#                  remoteIpHeader="x-forwarded-for"
+#                  remoteIpProxiesHeader="x-forwarded-by"
+#                  protocolHeader="x-forwarded-proto"
+#            />
+#      </Host>
+#    </Engine>
+#  </Service>
+#</Server>

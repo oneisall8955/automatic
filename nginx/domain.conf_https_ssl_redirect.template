@@ -1,0 +1,21 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name source.example.com;
+
+    # http redirect to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name source.example.com;
+
+    # ssl certificate absolute path , also it could be relative path (relative NGINX_HOME})
+    ssl_certificate /opt/software/nginx/ssl/www.example.com.crt;
+    ssl_certificate_key /opt/software/nginx/ssl/www.example.com.key;
+
+    # return is better than rewrite
+    return 301 https://target.example.com$request_uri;
+}
