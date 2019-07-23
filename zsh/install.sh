@@ -62,14 +62,11 @@ setopt no_nomatch
 
 #添加内容到文件底部!!!
 
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "\$(dircolors -b ~/.dircolors)" || eval "\$(dircolors -b)"
-    alias ls='ls --color=auto'
-    alias dir='dir --color=auto'
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
+alias ls='ls --color=auto'
+alias dir='dir --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 
 alias ll='ls -l'
 alias la='ls -a'
@@ -95,6 +92,9 @@ bindkey "\033[1~" beginning-of-line
 bindkey "\033[4~" end-of-line
 EOF
 `
+echo ""
+echo ""
+
 #update /etc/zsh/zprofile
 #support the file under the directory /etc/profile.d/
 while read line
