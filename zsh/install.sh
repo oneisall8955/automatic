@@ -9,6 +9,9 @@ cd ${this_shell_dir}/..
 automatic_dir=`pwd`
 cd ${execute_path}
 
+#inclue basic function
+source ${automatic_dir}/basic_shell.sh
+
 #install zsh
 apt-get -y install zsh
 #change shell to zsh
