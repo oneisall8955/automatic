@@ -13,6 +13,7 @@ cd ${execute_path}
 source ${automatic_dir}/basic_shell.sh
 
 info "系统初始化ssh/git 开始..."
+sleep 2s
 
 while read line
 do
@@ -36,7 +37,7 @@ echo ""
 echo ""
 
 info "公私钥生成程序start..."
-if read -t 10 -p "yes/YES/Y/y 是否生成公钥私钥?" keygen
+if read -t 10 -p "yes/YES/Y/y 是否生成公钥私钥(10秒后默认跳过此设置):" keygen
 then
     keygen=`echo ${keygen} | tr '[a-z]' '[A-Z]'`
     info_var $LINENO "keygen"
@@ -49,6 +50,7 @@ else
     warn "跳过生成公钥部分!"
 fi
 info "公私钥生成程序end..."
+sleep 2s
 echo ""
 echo ""
 echo ""
@@ -61,7 +63,7 @@ echo ""
 echo ""
 
 info "git 全局配置start..."
-if read -t 10 -p "填写git用户名称!" name
+if read -t 10 -p "填写git用户名称(10秒后默认跳过此设置):" name
 then
     info_var $LINENO "name" "user.name"
     if [[ "${name}X" != "X" ]];then
@@ -70,8 +72,9 @@ then
 else
     warn "跳过设置:git config --global user.name 'your name' "
 fi
+sleep 2s
 
-if read -t 10 -p "填写git用户名称!" email
+if read -t 10 -p "填写git用户名称(10秒后默认跳过此设置):" email
 then
     info_var $LINENO "email" "user.email"
     if [[ "${name}X" != "X" ]];then
@@ -81,6 +84,7 @@ else
     warn "跳过设置:git config --global user.email 'your email' "
 fi
 info "git 全局配置end..."
+sleep 2s
 echo ""
 echo ""
 echo ""
