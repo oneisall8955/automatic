@@ -42,6 +42,8 @@ then
     info_var $LINENO "keygen"
     if [[ ${keygen} == "YES" || ${keygen} == "Y" ]];then
         ssh-keygen -t rsa
+    else
+        warn "选择不生成公钥私钥!"
     fi
 else
     warn "跳过生成公钥部分!"
