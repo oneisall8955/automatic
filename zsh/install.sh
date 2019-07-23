@@ -23,7 +23,7 @@ apt-get -y install git
 #install ...
 wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | sh
 #fonts
-apt install -y fonts-powerline
+apt-get -y install fonts-powerline
 
 #helpful tools
 #autojump
@@ -51,12 +51,6 @@ ZSH_THEME="pygmalion"
 plugins=(git autojump zsh-autosuggestions zsh-syntax-highlighting last-working-dir)
 
 #一些开关
-#自动更正错误命令
-ENABLE_CORRECTION="true"
-#命令执行小红点进行提示
-COMPLETION_WAITING_DOTS="true"
-#自动更新提醒
-DISABLE_UPDATE_PROMPT=true
 #find命令查找指定目录下所有头文件时出现问题
 setopt no_nomatch
 
@@ -103,12 +97,6 @@ echo ""
 #plugins=(git autojump zsh-autosuggestions zsh-syntax-highlighting last-working-dir)
 #
 ##一些开关
-##自动更正错误命令
-#ENABLE_CORRECTION="true"
-##命令执行小红点进行提示
-#COMPLETION_WAITING_DOTS="true"
-##自动更新提醒
-#DISABLE_UPDATE_PROMPT=true
 ##find命令查找指定目录下所有头文件时出现问题
 #setopt no_nomatch
 #
