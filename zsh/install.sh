@@ -175,13 +175,15 @@ while read line
 do
    echo_ yellow ${line}
 done <<< `cat << EOF
-if [[ \$prompt_length -gt 40 ]]; then
+##~/.oh-my-zsh/themes/pygmalion.zsh-theme prompt optimize
+#修改~/.oh-my-zsh/themes/pygmalion.zsh-theme,将40改成0,即提示的字符大于0的时候就换行,避免提示格式不一致
+if [[ \$prompt_length -gt 0 ]]; then
   nl=$'\n%{\r%}';
 fi
 PROMPT="\$base_prompt\$gitinfo\$nl\$post_prompt"
 EOF
 `
-#if [[ $prompt_length -gt 40 ]]; then
+#if [[ $prompt_length -gt 0 ]]; then
 #    nl=$'\n%{\r%}';
 #  fi
 #PROMPT="$base_prompt$gitinfo$nl$post_prompt"
