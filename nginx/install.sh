@@ -57,34 +57,20 @@ fi
 cd ${temp}/nginx-${nginx_version}
 #编译配置
 nginx_configure="--prefix=${nginx_home}"
-#with-http_ssl_module模块
-warn $LINENO "是否使用with-http_ssl_module?(用于支持网页https访问)"
-if read -t 10 -p "yes/YES/Y/y选择安装,10s后不输入默认不安装)" chose_https
-then
-    info_var $LINENO "chose_https"
-else
-    info_var $LINENO "chose_https"
-    info $LINENO "默认不安装with-http_ssl_module"
-fi
-chose_https=`echo ${chose_https} | tr '[a-z]' '[A-Z]'`
-if [[ ${chose_https} == "YES" || ${chose_https} == "Y" ]];then
-    #选择安装!!!
-    chose_https=1
-    info $LINENO "选择安装with-http_ssl_module"
-    nginx_configure="${nginx_configure} --with-http_ssl_module --with-http_v2_module --with-http_ssl_module"
-else
-    chose_https=0
-fi
+# --with-http_ssl_module
+# --with-http_v2_module
+# --
+nginx_configure="${nginx_configure} --with-http_ssl_module --with-http_v2_module"
 
 info $LINENO "nginx编译配置如下:"
 info_var $LINENO "nginx_configure"
-sleep 5s
+sleep 3s
 
 ./configure ${nginx_configure}
 
 make && make install >/dev/null
 
-whereis nginx | awk -F ':' '{print $2}' | xargs rm -rf
+default_backup `whereis nginx | awk -F ':' '{print $2}'`
 ln -s ${nginx_home}/sbin/nginx /usr/bin/nginx
 
 cat > /lib/systemd/system/nginx.service <<EOF
