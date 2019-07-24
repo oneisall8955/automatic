@@ -17,7 +17,7 @@ sleep 2s
 
 while read line
 do
-    warn $LINENO ${line}
+    warn "${line:-#}"
 done <<< `cat << EOF
 #如第一次登陆服务器,建议修改端口避免入侵!!!
 #已修改则忽略提示
@@ -65,29 +65,43 @@ echo ""
 echo ""
 
 info "git 全局配置start..."
-if read -t 10 -p "填写git用户名称(10秒后默认跳过此设置):" name
+if read -t 10 -p "是否设置git用户名称(10秒后默认跳过此设置)?(Y/n):" choice
 then
-    info_var $LINENO "name" "user.name"
-    if [[ -n ${name} ]];then
-        git config --global user.name "${name}"
+    choice=`echo ${choice} | tr '[a-z]' '[A-Z]'`
+    info_var $LINENO "choice" "配置git user.name?"
+    if [[ "$choice" == "Y" || "${choice}" == "YES" ]];then
+        read -p "请输如user.name的值:" name
+        info_var $LINENO "name" "user.name"
+        if [[ -n ${name} ]];then
+            git config --global user.name "${name}"
+        else
+            warn "输入为空,取消设置user.name"
+        fi
     fi
 else
     warn "跳过设置:git config --global user.name 'your name' "
 fi
 sleep 2s
 
-if read -t 10 -p "填写git用户名称(10秒后默认跳过此设置):" email
+
+if read -t 10 -p "是否设置git邮箱(10秒后默认跳过此设置)?(Y/n):" choice
 then
-    info_var $LINENO "email" "user.email"
-    if [[ -n ${email} ]];then
-        git config --global user.email "${email}"
+    choice=`echo ${choice} | tr '[a-z]' '[A-Z]'`
+    info_var $LINENO "choice" "配置git user.email?"
+    if [[ "$choice" == "Y" || "${choice}" == "YES" ]];then
+        read -p "请输如user.email的值:" email
+        info_var $LINENO "email" "user.email"
+        if [[ -n ${email} ]];then
+            git config --global user.email "${email}"
+        else
+            warn "输入为空,取消设置user.email"
+        fi
     fi
 else
     warn "跳过设置:git config --global user.email 'your email' "
 fi
-info "git 全局配置end..."
 sleep 2s
-echo ""
+
 echo ""
 echo ""
 
@@ -96,6 +110,37 @@ git config -l
 sleep 5s
 
 echo ""
-echo ""
-echo ""
 info "ssh && git 初始化完毕"
+echo ""
+echo ""
+
+info "vim 配置start..."
+if read -t 10 -p "是否配置vim?(Y/n):" choice
+then
+    choice=`echo ${choice} | tr '[a-z]' '[A-Z]'`
+    info_var $LINENO "choice" "配置Vim?"
+    if [[ "${choice}" == "Y" || "${choice}" == "YES" ]] ;then
+        vimrc="${this_shell_dir}/.vimrc"
+        info_var $LINENO "vimrc"
+        if [[ ! -f ${vimrc} ]];then
+            error $LINENO ".vimrc不存在!"
+            exit 1
+        fi
+        default_backup "~/.vimrc"
+        cp ${vimrc} "~/.vimrc"
+        info "配置vim完成,配置如下"
+        cat ~/.vimrc
+        sleep 3s
+    fi
+else
+    warn "跳过配置vim"
+fi
+sleep 2s
+echo ""
+info "vim配置步骤结束"
+echo ""
+echo ""
+
+sleep 3
+info $LINENO "本次初始化已结束"
+info $LINENO "EOF"
