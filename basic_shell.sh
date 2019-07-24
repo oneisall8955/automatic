@@ -122,7 +122,7 @@ function get_properties(){
     file=$1
     key=$2
     value=""
-    if [[ -z ${file}} || ! -f ${file} || -z ${key} ]];then
+    if [[ -z ${file} || ! -f ${file} || -z ${key} ]];then
         get_properties_error
     else
         while read line
