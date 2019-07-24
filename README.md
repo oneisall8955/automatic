@@ -10,6 +10,7 @@
 * Typecho & 主题 自动安装
 * ...
 ### 相关规范
+* 每个模块的使用方式:阅读模块里面的README.md,执行里面的install.sh/init.sh
 * 软件安装路径:`/opt/software/`,如
     * 安装`nginx`,安装到`/opt/software/nginx/`
     * 安装`typecho`安装到`/opt/software/typecho`
