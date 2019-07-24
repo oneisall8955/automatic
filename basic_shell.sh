@@ -166,7 +166,16 @@ function default_backup(){
     info_var "now_time"
     for file in "$@"
     do
-        info_var "file" "待备份文件"
+        info_var "file" "传递的备份文件名称"
+        file_base_name=`basename ${file}`
+        info_var "file_base_name"
+        file_dir_name=`dirname ${file}`
+        if [[ ${file_dir_name} == '~' ]];then
+            file_dir_name=${HOME}
+        fi
+        info_var "file_dir_name"
+        file=${file_dir_name}/${file_base_name}
+        info_var "file" "兼容的真实备份文件路径"
         if [[ -f ${file} ]];then
             backup_file="${file}.bak_${now_time}"
             info_var "backup_file" "${file}备份文件"
