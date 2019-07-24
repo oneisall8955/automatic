@@ -35,18 +35,18 @@ function format_(){
     echo "$ *=$*" >> ${format_log}
     msg="$*"
     echo "msg=${msg} check ..." >> ${format_log}
-    if [[ "${msg}X" == "X" ]] ;then
+    if [[ -z ${msg} ]] ;then
         echo "msg is empty.let msg=line_no,line_no=\"\"" >> ${format_log}
         msg=${line_no}
         line_no=""
     fi
     echo "line_no=${line_no} check..." >> ${format_log}
-    if [[ "${line_no}X" == "X" ]] ;then
+    if [[ -z ${line_no} ]] ;then
         result=`printf "[%5d]-${msg}\n" 0`
-        echo "line_no is emypt,result=${result}" >> ${format_log}
+        echo "line_no is empty,result=${result}" >> ${format_log}
     else
         result=`printf "[%5d]-${msg}\n" ${line_no}`
-        echo "line_no no emypt,result=${result}" >> ${format_log}
+        echo "line_no no empty,result=${result}" >> ${format_log}
     fi
     echo "${result}"
 }
@@ -107,8 +107,8 @@ function info_var(){
         title=$3
     fi
     info $LINENO "DEBUG---var_name=$var_name" >> ${info_var_log}
-    var_value=`eval echo '$'"$var_name"`
-    if [[ "${title}X" != "X" ]] ;then
+    var_value=`eval echo '$'"${var_name}"`
+    if [[ -n ${title} ]] ;then
         title="${title}:"
     fi
     info ${line_no} "${title}[${var_name}=${var_value}]"
@@ -118,11 +118,11 @@ function info_var(){
 #Usage:get_properties $file $key
 log_file="/opt/temp/get_properties.log"
 function get_properties(){
-rm -rf ${log_file}
+    rm -rf ${log_file}
     file=$1
     key=$2
     value=""
-    if [[ "${file}X" == "X" || ! -f ${file} || "${key}X" == "X" ]];then
+    if [[ -z ${file}} || ! -f ${file} || -z ${key} ]];then
         get_properties_error
     else
         while read line
@@ -176,4 +176,9 @@ function default_backup(){
         fi
     done
     return 0
+}
+
+
+command_exists() {
+    command -v "$@" >/dev/null 2>&1
 }

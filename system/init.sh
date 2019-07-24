@@ -56,8 +56,10 @@ echo ""
 echo ""
 
 info "git安装检查..."
-apt-get -y install git
-info "检查完毕"
+if ! command_exists git; then
+    apt-get -y install git
+fi
+info "安装检查完毕"
 echo ""
 echo ""
 echo ""
@@ -66,7 +68,7 @@ info "git 全局配置start..."
 if read -t 10 -p "填写git用户名称(10秒后默认跳过此设置):" name
 then
     info_var $LINENO "name" "user.name"
-    if [[ "${name}X" != "X" ]];then
+    if [[ -n ${name} ]];then
         git config --global user.name "${name}"
     fi
 else
@@ -77,7 +79,7 @@ sleep 2s
 if read -t 10 -p "填写git用户名称(10秒后默认跳过此设置):" email
 then
     info_var $LINENO "email" "user.email"
-    if [[ "${name}X" != "X" ]];then
+    if [[ -n ${email} ]];then
         git config --global user.email "${email}"
     fi
 else

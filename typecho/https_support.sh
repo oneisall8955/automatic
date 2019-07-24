@@ -15,7 +15,7 @@ source ${automatic_dir}/basic_shell.sh
 #find the nginx config dir
 etc_profile="/etc/profile"
 NGINX_CONF_DIR=${NGINX_CONF_DIR}
-if [[ ! -f "${etc_profile}" ]] && [[ "${NGINX_CONF_DIR}X" == "X" ]];then
+if [[ ! -f ${etc_profile} ]] && [[ -z ${NGINX_CONF_DIR} ]];then
     error $LINENO "找不到:环境变量配置文件:${etc_profile},失败"
     exit 1
 fi
@@ -29,14 +29,14 @@ info_var $LINENO "nginx_conf_dir"
 
 TYPECHO_HOME=${TYPECHO_HOME}
 info_var $LINENO "TYPECHO_HOME"
-if [[ "${TYPECHO_HOME}X" == "X" ]] || [[ ! -d ${TYPECHO_HOME} ]] ;then
+if [[ -z ${TYPECHO_HOME} ]] || [[ ! -d ${TYPECHO_HOME} ]] ;then
     error $LINENO "typecho路径不存在:${TYPECHO_HOME}"
     exit 1
 fi
 
 domain=$1
 info_var $LINENO "domain" "输入的域名"
-if [[ "${domain}X" == "X" ]]; then
+if [[ -z ${domain} ]]; then
     error $LINENO "请传递域名!!!"
     error $LINENO "Usage: bash https_support.sh 'hello.example.com'"
     exit 1
