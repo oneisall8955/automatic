@@ -1,10 +1,15 @@
 # automatic
-##### ``Debian``/``Ubuntu``,``(SystemD版本)``系Linux自动化脚本,如 :
+### 简介
+* **基于 `Debian`/`Ubuntu ` `(&&systemd)`系Linux自动化脚本**
+* 重点在于学习shell脚本的编写及命令的熟悉,复习相关知识
+* 如有错漏之处,敬请指正
+###功能
 * 有趣的基础脚本,如echo输出颜色,读取配置文件等工具
-* nginx自动编译安装(SystemD Service)
+* 初始化系统的设置,如: `git`,`vim`,`ssh`,`zshell`,`oh-my-zsh`
+* nginx自动编译安装(systemd service)
 * Typecho & 主题 自动安装
 * ...
-##### 相关规范
+### 相关规范
 * 软件安装路径:`/opt/software/`,如
     * 安装`nginx`,安装到`/opt/software/nginx/`
     * 安装`typecho`安装到`/opt/software/typecho`
@@ -55,24 +60,6 @@
         }
         #test
         echo_ yellow "hello world !"
-        ```
-    * 备份文件,默认备份,`original_name`->`original_name_date +'%Y%m%d_%H%M%S'`
-        ```bash
-        #aaa.txt - > aaa.txt_20190719_201251
-        function default_backup(){
-            if [[ $# -le 0 ]];then
-                return 0
-            fi
-            now_time=`date +'%Y%m%d_%H%M%S'`
-            for file in "$@"
-            do
-                if [[ -f ${file} ]];then
-                    backup_file="${file}.bak_${now_time}"
-                    mv ${file} ${backup_file}
-                fi
-            done
-            return 0
-        }
         ```
 
 * 安装过程中,如需要临时文件夹,统一输出到`/opt/temp`中,如

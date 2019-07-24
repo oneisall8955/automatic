@@ -32,6 +32,7 @@ sleep 2s
 echo ""
 
 info "公私钥生成程序start..."
+stty erase '^H'
 if read -t 10 -p "yes/YES/Y/y 是否生成公钥私钥(10秒后默认跳过此设置):" keygen
 then
     keygen=`echo ${keygen} | tr '[a-z]' '[A-Z]'`
@@ -56,6 +57,7 @@ info "安装检查完毕"
 echo ""
 
 info "git 全局配置start..."
+stty erase '^H'
 if read -t 10 -p "是否设置git用户名称(10秒后默认跳过此设置)?(Y/n):" choice
 then
     choice=`echo ${choice} | tr '[a-z]' '[A-Z]'`
@@ -74,7 +76,7 @@ else
 fi
 sleep 1s
 
-
+stty erase '^H'
 if read -t 10 -p "是否设置git邮箱(10秒后默认跳过此设置)?(Y/n):" choice
 then
     choice=`echo ${choice} | tr '[a-z]' '[A-Z]'`
@@ -103,6 +105,7 @@ info "ssh && git 初始化完毕"
 echo ""
 
 info "vim 配置start..."
+stty erase '^H'
 if read -t 10 -p "是否配置vim(10秒后默认跳过此配置)?(Y/n):" choice
 then
     choice=`echo ${choice} | tr '[a-z]' '[A-Z]'`
@@ -129,3 +132,23 @@ echo ""
 
 info $LINENO "本次初始化已结束"
 info $LINENO "EOF"
+
+##
+#vim-plug vim插件管理安装
+#1.
+#curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+#声明插件时，列表应该以 call plug#begin(PLUGIN_DIRECTORY)开始，并以 plug#end() 结束。
+#2.
+#安装 “lightline.vim” 插件。为此，请在 ~/.vimrc 的顶部添加以下行。
+#call plug#begin('~/.vim/plugged')
+#Plug 'itchyny/lightline.vim'
+#call plug#end()
+#3.
+#source ~/.vimrc
+#4.
+# vim中:
+# :PlugStatus 检查状态
+# :PlugInstall 安装之前在配置文件中声明的插件
+# :PlugUpdate 更新插件，按下 d 查看更改。或者，输入 :PlugDiff。
+# :PlugClean 删除或注释掉你以前在你的 vim 配置文件中添加的 plug 命令 运行  :source ~/.vimrc 或重启 Vim 编辑器,该命令将删除 vim 配置文件中所有未声明的插件
+# :PlugUpgrade 升级vim-plug本身
