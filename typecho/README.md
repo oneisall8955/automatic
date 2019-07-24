@@ -1,3 +1,14 @@
+# typecho安装与nginx/https模块
+
+### 使用步骤
+1. 安装typecho
+    ```bash
+    
+    ```
+2. 配置typecho
+
+3. 配置https域名(非必需)
+
 ### 关于typecho与Mirages主题
 * typecho位置安装在/opt/software/typecho
 * 数据库使用sqlite,sqlite的版本是3.x
@@ -5,12 +16,12 @@
 
     ```bash
     root@VM-0-14-debian:/opt/temp|
-    ⇒  cat /etc/profile.d/nginx_evn.sh
+    cat /etc/profile.d/nginx_evn.sh
     NGINX_CONF_DIR=/opt/software/nginx/conf.d
     export NGINX_CONF_DIR
     echo 'export nginx evn finish ... (this msg from /etc/profile.d/nginx_evn.sh)'
     root@VM-0-14-debian:/opt/temp|
-    ⇒  echo $NGINX_CONF_DIR
+    echo ${NGINX_CONF_DIR}
     /opt/software/nginx/conf.d
     ```
 * 外网typecho登陆地址:xxx.xxx.xxx.xxx:9528
