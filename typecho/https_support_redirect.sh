@@ -15,7 +15,7 @@ source ${automatic_dir}/basic_shell.sh
 #find the nginx config dir
 etc_profile="/etc/profile"
 NGINX_CONF_DIR=${NGINX_CONF_DIR}
-if [[ ! -f "${etc_profile}" ]] && [[ "${NGINX_CONF_DIR}X" == "X" ]] ;then
+if [[ ! -f "${etc_profile}" ]] && [[ -z ${NGINX_CONF_DIR} ]] ;then
     error $LINENO "找不到:环境变量配置文件:${etc_profile},失败"
     exit 1
 fi

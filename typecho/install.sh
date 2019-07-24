@@ -15,7 +15,7 @@ source ${automatic_dir}/basic_shell.sh
 #nginx
 nginx_bin=`whereis nginx | awk '{print $2}'`
 info_var $LINENO "nginx_bin"
-if [[ "${nginx_bin}x" == "x" ]] ;then
+if [[ -z ${nginx_bin} ]] ;then
     echo_ yelow "nginx 没有安装 正在安装..."
     nginx_install_shell="${automatic_dir}/nginx/install.sh"
     info_var $LINENO "nginx_install_shell"
@@ -32,7 +32,7 @@ if [[ "${nginx_bin}x" == "x" ]] ;then
     info $LINENO "nginx 安装完毕"
 else
     nginx_pids=`ps -ef | grep "nginx" |grep -v "grep" |awk '{print $2}'`
-    if [[ "${nginx_pids}x" == "x" ]] ;then
+    if [[ -z ${nginx_pids} ]] ;then
         warn $LINENO "检测没有开启nginx,正自动开启:systemctl start nginx.service"
         systemctl start nginx.service
     fi
@@ -54,14 +54,14 @@ info $LINENO "检查安装:php-fpm php-cli php-common php-curl php-sqlite3 php-x
 apt-get -y install php-fpm php-cli php-common php-curl php-sqlite3 php-xml
 #ex:php7.0-fpm.service
 php_fpm_service=`ls -lt /lib/systemd/system/ |grep 'fpm.service' | head -n 1 |awk '{print $NF}'`
-if [[ "${php_fpm_service}x" == "x" ]] ;then
+if [[ -z ${php_fpm_service} ]] ;then
     error $LINENO "没有找到最新的phpXX-fpm.service,默认失败"
     error $LINENO "执行查找命令:ls -lt /lib/systemd/system/ |grep 'fpm.service' | head -n 1 |awk '{print $NF}'"
     exit 1
 fi
 
 php_fpm_pids=`ps -ef | grep "php-fpm" |grep -v "grep" |awk '{print $2}'`
-if [[ "${php_fpm_pids}x" == "x" ]] ;then
+if [[ -z ${php_fpm_pids} ]] ;then
     warn $LINENO "检测没有开启php-fpm,正自动开启:systemctl start ${php_fpm_service}"
     systemctl start ${php_fpm_service}
 fi
@@ -91,7 +91,7 @@ info_var $LINENO "temp"
 #find the nginx config dir
 etc_profile="/etc/profile"
 NGINX_CONF_DIR=${NGINX_CONF_DIR}
-if [[ ! -f "${etc_profile}" ]] && [[ "${NGINX_CONF_DIR}X" == "X" ]];then
+if [[ ! -f "${etc_profile}" ]] && [[ -z ${NGINX_CONF_DIR} ]];then
     error $LINENO "找不到:环境变量配置文件:${etc_profile},失败"
     exit 1
 fi
