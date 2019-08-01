@@ -51,7 +51,7 @@ fi
 
 #php
 info $LINENO "检查安装:php-fpm php-cli php-common php-curl php-sqlite3 php-xml php-mbstring"
-apt-get -y install php-fpm php-cli php-common php-curl php-sqlite3 php-xml
+apt-get -y install php-fpm php-cli php-common php-curl php-sqlite3 php-xml php-mbstring
 #ex:php7.0-fpm.service
 php_fpm_service=`ls -lt /lib/systemd/system/ |grep 'fpm.service' | head -n 1 |awk '{print $NF}'`
 if [[ -z ${php_fpm_service} ]] ;then
