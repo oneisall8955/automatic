@@ -80,7 +80,8 @@ typecho_home="/opt/software/typecho/"
 mkdir -p ${typecho_home}
 temp="/opt/temp/typecho"
 mkdir -p ${temp}
-rm -rf ${temp}/*
+mkdir -p ${temp}/build/
+rm -rf ${temp}/build/*
 tar -xzf ${typecho_package} -C ${temp}
 cp -r ${temp}/build/* ${typecho_home}/
 
