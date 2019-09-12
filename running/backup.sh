@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+# remote ip
+REMOTE_IP=123.123.123.123
 # log file
 log_file="/opt/running/logs/backup.log"
 # the directory for stored the archive
@@ -16,7 +18,9 @@ function backup_current(){
     /bin/echo "======" >> ${log_file}
     /bin/echo "当前时间:${now_time}" >> ${log_file}
     /bin/echo "开始:同步备份${task}" >> ${log_file}
-    /usr/bin/rsync -avzP --password-file=/opt/running/config.d/rsyncd.pwd backup@129.204.126.34::${task} /opt/backup/current/${task}/ >> ${log_file} 2>&1
+    set +e
+    /usr/bin/rsync -avzP --password-file=/opt/running/config.d/rsyncd-client.pwd backup@${REMOTE_IP}::${task} /opt/backup/current/${task}/ >> ${log_file} 2>&1
+    set -e
     /bin/echo "结束:同步备份${task}"  >> ${log_file}
     now_time=`date +'%Y%m%d_%H_%M_%S'`
     /bin/echo "当前时间:${now_time}" >> ${log_file}
