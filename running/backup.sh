@@ -2,11 +2,13 @@
 
 # remote ip
 REMOTE_IP=123.123.123.123
+# user
+BACKUP_USER=backup
 # log file
 log_file="/opt/running/logs/backup.log"
 # the directory for stored the archive
 package_dir=/opt/backup/package
-# total of package ervery task
+# total of package every task
 backup_total=15
 # the task for backup
 task_array=("bitwarden" "typecho")
@@ -19,7 +21,7 @@ function backup_current(){
     /bin/echo "当前时间:${now_time}" >> ${log_file}
     /bin/echo "开始:同步备份${task}" >> ${log_file}
     set +e
-    /usr/bin/rsync -avzP --password-file=/opt/running/config.d/rsyncd-client.pwd backup@${REMOTE_IP}::${task} /opt/backup/current/${task}/ >> ${log_file} 2>&1
+    /usr/bin/rsync -avzP --password-file=/opt/running/config.d/rsyncd-client.pwd ${BACKUP_USER}@${REMOTE_IP}::${task} /opt/backup/current/${task}/ >> ${log_file} 2>&1
     set -e
     /bin/echo "结束:同步备份${task}"  >> ${log_file}
     now_time=`date +'%Y%m%d_%H_%M_%S'`
@@ -35,7 +37,7 @@ function backup_package(){
     /bin/echo "开始:打包${task}" >> ${log_file}
     begin_path=`/bin/pwd`
     cd /opt/backup/current/
-    
+
     # package the archive
     /bin/mkdir -p ${package_dir}/${task}
     nowDate=`date +'%Y%m%d'`
@@ -78,7 +80,7 @@ e_time=`date +'%Y%m%d_01_00_00'` # end time
 /bin/echo "now time:${n_time}" >> ${log_file}
 /bin/echo "sta time:${s_time}" >> ${log_file}
 /bin/echo "end time:${e_time}" >> ${log_file}
-if [[ ${n_time} > $s_time ]] && [[ ${now_time} < ${e_time} ]] ;then
+if [[ ${n_time} > ${s_time} ]] && [[ ${now_time} < ${e_time} ]] ;then
     /bin/echo "时间是当天凌晨" >> ${log_file}
     /bin/echo "打包开始" >> ${log_file}
     for job in ${task_array[@]}
