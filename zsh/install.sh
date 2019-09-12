@@ -84,6 +84,7 @@ alias -s bz2='tar -xjvf'
 #修复Home/End 键在zsh中不起作用
 bindkey "\033[1~" beginning-of-line
 bindkey "\033[4~" end-of-line
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=3"
 
 #zsh-autosuggestions插件,光标右边颜色
 #https://github.com/zsh-users/zsh-autosuggestions/issues/12
@@ -133,6 +134,9 @@ echo ""
 ##修复Home/End 键在zsh中不起作用
 #bindkey "\033[1~" beginning-of-line
 #bindkey "\033[4~" end-of-line
+
+#推荐建议的优化颜色
+#export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=3"
 
 #update /etc/zsh/zprofile
 #support the file under the directory /etc/profile.d/
