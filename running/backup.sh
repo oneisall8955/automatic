@@ -80,7 +80,7 @@ e_time=`date +'%Y%m%d_01_00_00'` # end time
 /bin/echo "now time:${n_time}" >> ${log_file}
 /bin/echo "sta time:${s_time}" >> ${log_file}
 /bin/echo "end time:${e_time}" >> ${log_file}
-if [[ ${n_time} > ${s_time} ]] && [[ ${now_time} < ${e_time} ]] ;then
+if [[ ${n_time} > ${s_time} || ${n_time} = ${s_time} ]] && [[ ${now_time} < ${e_time} ]] ;then
     /bin/echo "时间是当天凌晨" >> ${log_file}
     /bin/echo "打包开始" >> ${log_file}
     for job in ${task_array[@]}
