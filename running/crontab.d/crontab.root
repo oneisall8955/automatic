@@ -1,2 +1,4 @@
-# 每小时备份一次
+# 同步实时备份其他主机，每小时一次
 0 * * * * /bin/bash /opt/running/backup.sh >> /opt/running/logs/backup.log 2>&1
+# SSH黑名单，没分钟一次检查
+*/1 * * * * /bin/bash /opt/running/secure_ssh.sh
