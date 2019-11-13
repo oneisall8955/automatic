@@ -29,5 +29,5 @@ do
         echo "sshd:${IP}" >> /etc/hosts.deny
     fi
 done
-sort -t= -k2 -n ${BLACK_LIST_FILE} > ${BLACK_LIST_FILE}_
+sort -t= -k2 -n -r ${BLACK_LIST_FILE} > ${BLACK_LIST_FILE}_
 mv ${BLACK_LIST_FILE}_ ${BLACK_LIST_FILE}
